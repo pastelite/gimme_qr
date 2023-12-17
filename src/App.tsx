@@ -11,7 +11,7 @@ function App() {
     genQRCode(inputText).then((res) => {
       if (!res) return
       setOutput(JSON.stringify(res.modules.data))
-      drawQR(res.modules.data, canvas.current!, {color:"red", shape:"circle"})
+      drawQR(res.modules.data, canvas.current!, {color:"black", shape:"circle"})
     })
   }, [inputText])
 
@@ -87,12 +87,62 @@ function drawQR(data: Uint8Array, canvas: HTMLCanvasElement, config?: DrawQRConf
       let startCol = col * size //x
       let startRow = row * size //y
 
+      ctx.fillStyle = (config?.color || '#000')
       ctx.beginPath();
+      
+      if (data[i] == 0) {
+        // fill everything first
+        // ctx.fillStyle = '#00f'
+        ctx.rect(startCol, startRow, size, size)
+        ctx.fill();
+        ctx.beginPath();
+        ctx.fillStyle = '#fff'
+      }
       ctx.moveTo(startCol, startRow+size/2);
 
-      let arc = [0, 0, 1, 0]
-      // TL, TR, BR, BL
+      // Get Arcs
+      let emptySide = [0, 0, 0, 0] // T, R, B, L
 
+      // Top
+      if (row == 0) emptySide[0] = 1
+      else if (data[i-width] == 0) emptySide[0] = 1
+
+      // Right
+      if (col == width-1) emptySide[1] = 1
+      else if (data[i+1] == 0) emptySide[1] = 1
+
+      // Bottom
+      if (row == width-1) emptySide[2] = 1
+      else if (data[i+width] == 0) emptySide[2] = 1
+
+      // Left
+      if (col == 0) emptySide[3] = 1
+      else if (data[i-1] == 0) emptySide[3] = 1
+      
+      // Generate arcs
+      let arc = [0, 0, 0, 0] // TL, TR, BR, BL
+
+      if (emptySide[3] && emptySide[0]) arc[0] = 1
+      if (emptySide[0] && emptySide[1]) arc[1] = 1
+      if (emptySide[1] && emptySide[2]) arc[2] = 1
+      if (emptySide[2] && emptySide[3]) arc[3] = 1
+
+      // for white, check corners and surrounding
+      if (data[i] == 0) {
+      arc = [0, 0, 0, 0]
+      // TL
+      // if (!data[i-width-1]) arc[0] = 0
+      if (data[i-width-1]==1 && !emptySide[3] && !emptySide[0]) arc[0] = 1
+      // TR
+      if (data[i-width+1]==1 && !emptySide[0] && !emptySide[1]) arc[1] = 1
+      // BR
+      if (data[i+width+1]==1 && !emptySide[1] && !emptySide[2]) arc[2] = 1
+      // BL
+      if (data[i+width-1]==1 && !emptySide[2] && !emptySide[3]) arc[3] = 1
+      }
+      
+
+      // Draw arcs
       // TL
       let stop1 = [startCol, startRow]
       let stop2 = [startCol+size/2, startRow]
