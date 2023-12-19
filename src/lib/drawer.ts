@@ -21,6 +21,8 @@ export default function drawQR(data: Uint8Array, canvas: HTMLCanvasElement, conf
   if (!ctx) return
 
   const width = Math.sqrt(data.length)
+  const desiredCanvasSize = 2000
+  config.pixelSize = Math.floor(desiredCanvasSize / width)
   canvas.width = width * config.pixelSize!
   canvas.height = width * config.pixelSize!
 

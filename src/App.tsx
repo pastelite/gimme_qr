@@ -12,23 +12,36 @@ function App() {
     genQRCode(inputText).then((res) => {
       if (!res) return
       setOutput(JSON.stringify(res.modules.data))
-      drawQR(res.modules.data, canvas.current!, {color:"black", shape:"circle"})
+      drawQR(res.modules.data, canvas.current!, { color: "black", shape: "circle" })
     })
   }, [inputText])
 
+  function handleDownload() {
+    const link = document.createElement('a')
+    link.download = 'qrcode.png'
+    link.href = canvas.current!.toDataURL()
+    link.click()
+  }
+
   return (
     <>
-    <h1>Gimme QR</h1>
-    <div className="Input">
-      <input type="text" onChange={(e)=>{
-       setInputText(e.target.value)
-      }}></input>
-    </div>
-    <div>
-      Output
-      {output}
-      <canvas id="canvas" ref={canvas}></canvas>
-    </div>
+      <div id="container">
+        <div id="input">
+          Input:
+          <input type="text" onChange={(e) => {
+            setInputText(e.target.value)
+          }}></input>
+        </div>
+        <div id="config">
+          Config
+          test
+        </div>
+      </div>
+      <div id="qr">
+        <canvas id="canvas" ref={canvas}></canvas>
+        <button onClick={handleDownload}>Download</button>
+      </div>
+
       {/* <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
