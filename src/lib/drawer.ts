@@ -1,4 +1,4 @@
-type DrawQRConfig = {
+export type DrawQRConfig = {
   color: string
   shape: string
   pixelSize: number

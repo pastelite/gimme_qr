@@ -1,26 +1,39 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import * as QRCode from 'qrcode'
-import drawQR from './lib/drawer'
+import drawQR, { DrawQRConfig } from './lib/drawer'
 
 function App() {
   const [inputText, setInputText] = useState<string>('test')
-  const [output, setOutput] = useState<string>('')
+  const [config, setConfig] = useState<DrawQRConfig>({
+    color: 'black',
+    shape: 'circle',
+    pixelSize: 0, //unusued
+  })
+
   const canvas = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     genQRCode(inputText).then((res) => {
       if (!res) return
-      setOutput(JSON.stringify(res.modules.data))
-      drawQR(res.modules.data, canvas.current!, { color: "black", shape: "circle" })
+
+      drawQR(res.modules.data, canvas.current!, config)
     })
-  }, [inputText])
+  }, [inputText, config])
 
   function handleDownload() {
     const link = document.createElement('a')
     link.download = 'qrcode.png'
     link.href = canvas.current!.toDataURL()
     link.click()
+  }
+
+  function handleValueChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const { name, value } = e.target
+    setConfig((config) => ({
+      ...config,
+      [name]: value,
+    }))
   }
 
   return (
@@ -34,34 +47,16 @@ function App() {
         </div>
         <div id="config">
           Config
-          test
+          <select name="shape" id="shape" multiple onChange={handleValueChange}>
+            <option value="circle">circle</option>
+            <option value="square">square</option>
+          </select>
         </div>
       </div>
       <div id="qr">
         <canvas id="canvas" ref={canvas}></canvas>
         <button onClick={handleDownload}>Download</button>
       </div>
-
-      {/* <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
     </>
   )
 }
