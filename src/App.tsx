@@ -2,14 +2,18 @@ import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import * as QRCode from 'qrcode'
 import drawQR, { DrawQRConfig } from './lib/drawer'
+import { useQRCodeStore } from './store'
 
 function App() {
   const [inputText, setInputText] = useState<string>('test')
-  const [config, setConfig] = useState<DrawQRConfig>({
-    color: 'black',
-    shape: 'circle',
-    pixelSize: 0, //unusued
-  })
+  const [config, setConfig] = useQRCodeStore((state) => [state.config, state.setConfig])
+  // const [config, setConfig] = useState<DrawQRConfig>({
+  //   color: 'black',
+  //   shape: 'circle',
+  //   pixelSize: 0, //unusued
+  // })
+  // const [shape, setShape] = useQRCodeStore((state) => [state.shape, state.setShape])
+  // const [color, setColor] = useQRCodeStore((state) => [state.color, state.setColor])
 
   const canvas = useRef<HTMLCanvasElement>(null)
 
@@ -28,12 +32,13 @@ function App() {
     link.click()
   }
 
-  function handleValueChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const { name, value } = e.target
-    setConfig((config) => ({
-      ...config,
-      [name]: value,
-    }))
+  function valueChangeHandlerGenerator(name: keyof DrawQRConfig) {
+    return (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setConfig({
+        ...config,
+        [name]: e.target.value as any,
+      })
+    }
   }
 
   return (
@@ -47,7 +52,7 @@ function App() {
         </div>
         <div id="config">
           Config
-          <select name="shape" id="shape" multiple onChange={handleValueChange}>
+          <select name="shape" id="shape" onChange={valueChangeHandlerGenerator("shape")}>
             <option value="circle">circle</option>
             <option value="square">square</option>
           </select>
