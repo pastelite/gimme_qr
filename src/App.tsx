@@ -3,6 +3,8 @@ import './App.css'
 import * as QRCode from 'qrcode'
 import drawQR, { DrawQRConfig } from './lib/drawer'
 import { useQRCodeStore } from './store'
+import { Scaffold } from './components/Scaffold'
+// import { Scaffold } from './components/Scaffold.1'
 
 function App() {
   const [inputText, setInputText] = useState<string>('test')
@@ -43,7 +45,26 @@ function App() {
 
   return (
     <>
-      <div id="container">
+      <Scaffold
+        above={
+          <div id="input">
+            Input:
+            <input type="text" onChange={(e) => {
+              setInputText(e.target.value)
+            }}></input>
+          </div>
+        }
+        below={
+          <div id="config">
+            Config
+            <select name="shape" id="shape" onChange={valueChangeHandlerGenerator("shape")}>
+              <option value="circle">circle</option>
+              <option value="square">square</option>
+            </select>
+          </div>
+        }
+      />
+      {/* <div id="container">
         <div id="input">
           Input:
           <input type="text" onChange={(e) => {
@@ -61,9 +82,14 @@ function App() {
       <div id="qr">
         <canvas id="canvas" ref={canvas}></canvas>
         <button onClick={handleDownload}>Download</button>
-      </div>
+      </div> */}
     </>
   )
+}
+
+export interface LayoutManagerProps {
+  above?: React.ReactNode
+  below?: React.ReactNode
 }
 
 async function genQRCode(text: string) {

@@ -1,0 +1,12 @@
+#scaffold {
+  @apply grid grid-rows-[200px_1fr] h-screen w-screen overflow-hidden relative;
+  grid-template-areas: "under" "above";
+}
+
+@media (min-width: 768px) {
+  #scaffold {
+    @apply md:grid-rows-1 md:grid-cols-[34fr_13fr];
+    grid-template-areas:
+      "above under";
+  }
+}

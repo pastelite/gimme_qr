@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -16,7 +20,16 @@ body {
 }
 
 #root {
-  /* max-width: 1280px; */
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: grid;
+  /* Expand */
+  grid-template-columns: 1fr;
+}
+
+/* #root {
+  / max-width: 1280px; /
   width: 100%;
   margin: 0 auto;
   display: grid;
@@ -28,4 +41,4 @@ body {
   #root {
     grid-template-columns: 1fr;
   }
-}
+} */
