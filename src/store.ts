@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { DrawQRConfig } from './lib/drawer'
 import { CSSProperties } from 'react'
 
+
 enum Shape {
   Circle = 'circle',
   Square = 'square',
@@ -51,4 +52,15 @@ export const useThemeStore = create<ThemeStore>((set) => ({
   behindBackgroundSurfaceColor: '#e3e6ff',
   behindBackgroundTextColor: '#ffffff',
   setTheme: (theme) => set(theme),
+}))
+
+
+interface MeasurementStore {
+  breakpoint: number
+  setBreakpoint: (breakpoint: number) => void
+}
+
+export const useMeasurementStore = create<MeasurementStore>((set) => ({
+  breakpoint: 0,
+  setBreakpoint: (breakpoint) => set({ breakpoint }),
 }))
