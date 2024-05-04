@@ -27,13 +27,15 @@ export function QRInput() {
       setInputText(e.target.value);
     }}></input>
 
-    <div id="config">
-      Config
+    <div id="config" className="flex gap-4">
+      <OptionSelector popupPage='shape' title='Shape'></OptionSelector>
+      <OptionSelector popupPage='pixelSize' title='Pixel Size'></OptionSelector>
+      {/* Config
       <select name="shape" id="shape" onChange={valueChangeHandlerGenerator("shape")}>
         <option value="circle">circle</option>
         <option value="square">square</option>
-      </select>
+      </select> */}
     </div>
-    <OptionSelector popupPage='shape' title='Shape'></OptionSelector>
+
   </BackgroundSurface>);
 }

@@ -1,31 +1,55 @@
 import { closePopup, usePopupStore, useThemeStore } from "../store";
-import CloseIcon from '../assets/material-icons/close.svg?react';
+import CheckIcon from '../assets/material-icons/check.svg?react';
+import { SwitchTransition, CSSTransition } from 'react-transition-group';
+import { RefObject, useRef, useState } from "react";
 
 interface PopUpProps {
-  components?: { [key: string]: React.ReactNode; };
+  components: { [key: string]: React.ReactNode; };
 }
 
 export function PopUp({ components }: PopUpProps) {
   let page = usePopupStore((state) => state.page);
+  // let [state, setCurrentState] = useState(true);
+  const refs = Object.keys(components).reduce<{ [key: string]: RefObject<HTMLDivElement> }>((acc, key) => {
+    acc[key] = useRef(null);
+    return acc;
+  }, {});
+  let defaultRef = useRef(null);
+  let nodeRef = refs[page] || defaultRef;
 
-  return <div className="w-full h-full fixed" style={{
-    pointerEvents: components && page in components ? "auto" : "none",
-  }} onClick={() => {
-    if (components && page in components) closePopup();
-  }}>
-    <div className='bg-white mx-0 md:mx-8 fixed top-[100%] left-0 right-0 
+  return <div className='bg-white mx-0 md:mx-8 fixed top-[100%] left-0 right-0 
   rounded-t-[1.5rem] shadow-[0_2px_16px_rgba(0,0,0,0.25)] 
   transition-transform duration-300 ease-in-out p-8'
-      style={{
-        // padding: `2rem ${padding_x}px`,
-        // bottom: components && !(page in components) ? "-100%" : "0",
-        transform: components && page in components ? "translateY(-100%)" : "translateY(0)",
-      }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      {components && page in components ? components[page] : ""}
-    </div>
+    style={{
+      transform: components && page in components ? "translateY(-100%)" : "translateY(0)",
+    }}
+  >
+    <SwitchTransition mode="out-in">
+      <CSSTransition
+        key={page}
+        classNames="fade"
+        nodeRef={nodeRef}
+        timeout={100}
+        onEnter={() => {
+          console.log("enter")
+        }}
+        // @ts-ignore
+        addEndListener={(node, done) => {
+          // @ts-ignore
+          nodeRef.current.addEventListener("transitionend", done, false);
+        }}
+      >
+        <div ref={nodeRef}>
+          {components && page in components ? components[page] :
+            <OptionPopUpTemplate header="" options={{
+              a: ""
+            }} />
+          }
+        </div>
+      </CSSTransition>
+    </SwitchTransition>
   </div>
+
 }
 
 interface OptionPopUpTemplateProps {
@@ -39,10 +63,18 @@ export function OptionPopUpTemplate({ header, options, setter, value }: OptionPo
   const theme = useThemeStore();
 
   return <div className="flex flex-col gap-5">
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center">
       <div className='text-2xl'>{header}</div>
-      <div onClick={closePopup}>
-        <CloseIcon />
+      <div onClick={closePopup} className="rounded-full px-4 py-2 flex items-center gap-2" style={{
+        backgroundColor: theme.accentColor,
+        color: theme.accentTextColor
+      }}>
+        Done
+        <CheckIcon style={{
+          fill: theme.accentTextColor,
+          height: "1.5em",
+          width: "1.5em",
+        }} />
       </div>
     </div>
     <div className="flex justify-start gap-4">

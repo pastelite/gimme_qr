@@ -13,6 +13,16 @@ export function CustomizedPopUp() {
         ...config,
         shape: (key as any)
       });
-    }} value={config.shape}></OptionPopUpTemplate>
+    }} value={config.shape}></OptionPopUpTemplate>,
+    pixelSize: <OptionPopUpTemplate header='pixelSize' options={{
+      'small': <div>Small</div>,
+      'medium': <div>Medium</div>,
+      'large': <div>Large</div>
+    }} setter={key => {
+      setConfig({
+        ...config,
+        pixelSize: (key as any)
+      });
+    }} value={config.pixelSize.toString()}></OptionPopUpTemplate>
   }} />);
 }
