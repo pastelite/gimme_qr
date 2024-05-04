@@ -1,10 +1,15 @@
 import { useThemeStore } from '../store';
-import { LayoutManagerProps } from '../App';
 import './Scaffold.style.css'
 import { Header } from './Header';
+import { BackgroundSurface, BehindBackgroundSurface } from './Surface';
 
+export interface LayoutManagerProps {
+  // above?: React.ReactNode
+  // below?: React.ReactNode
+  children: React.ReactNode
+}
 
-export function Scaffold({ above, below }: LayoutManagerProps) {
+export function Scaffold({ children }: LayoutManagerProps) {
   let theme = useThemeStore();
 
   return (
@@ -14,41 +19,8 @@ export function Scaffold({ above, below }: LayoutManagerProps) {
         color: theme.textColor,
       }}
     >
-      <Header />
-      <BackgroundSurface gridArea='above'>
-        {above}
-      </BackgroundSurface>
-      <BehindBackgroundSurface gridArea='under'>
-        {below}
-      </BehindBackgroundSurface>
-      {/* <div id="scaffold_under">
-        {below}
-      </div> */}
+      {children}
     </div>
   );
 }
 
-interface SurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
-  gridArea: string
-}
-
-function BackgroundSurface({children, className, style, gridArea, ...props}:SurfaceProps) {
-  let theme = useThemeStore()
-  
-  return <div className={`shadow-[2px_2px_16px_rgba(0,0,0,0.1)] ${className}`} {...props} style={{
-    backgroundColor: theme.backgroundColor,
-    gridArea: gridArea,
-    ...style
-  }}>
-    {children}
-  </div>
-}
-
-function BehindBackgroundSurface({children, style, gridArea, ...props}:SurfaceProps) {
-  return <div {...props} style={{
-    gridArea: gridArea,
-    ...style
-  }}>
-    {children}
-  </div>
-}

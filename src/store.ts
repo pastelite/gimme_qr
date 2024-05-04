@@ -16,7 +16,7 @@ interface QRCodeStore {
 }
 
 export const useQRCodeStore = create<QRCodeStore>((set) => ({
-  inputText: '',
+  inputText: 'https://qr.pstl.dev',
   config: {
     color: 'black',
     shape: Shape.Circle,

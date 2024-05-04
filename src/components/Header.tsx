@@ -8,10 +8,27 @@ export function Header() {
   let breakpoint = useMeasurementStore((state) => state.breakpoint);
 
   let surfaceColor = breakpoint >= themeBreakpoints['md'] ? theme.surfaceColor : theme.behindBackgroundSurfaceColor;
-
-
-  return (<div className='flex absolute left-24 top-12 h-[40px] w-max shadow-none' style={{
-    gridArea: 'header'
+  let left = 0
+  if (breakpoint >= themeBreakpoints['lg']) {
+    left = 100
+  } else if (breakpoint >= themeBreakpoints['md']) {
+    left = 50
+  } else {
+    left = 24
+  }
+  let top = 0
+  if (breakpoint >= themeBreakpoints['lg']) {
+    top = 50
+  } else if (breakpoint >= themeBreakpoints['md']) {
+    top = 50
+  } else {
+    top = 24
+  }
+  
+  return (<div className='flex absolute h-[40px] w-max shadow-none' style={{
+    gridArea: 'header',
+    left: `${left}px`,
+    top: `${top}px`,
   }}>
     <div className='w-[40px] h-[40px] grid place-items-center' style={{
       backgroundColor: theme.accentColor,
