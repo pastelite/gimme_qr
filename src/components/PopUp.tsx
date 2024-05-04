@@ -1,4 +1,3 @@
-import { useLeftBreakpoints } from "../hooks/useBreakpoints";
 import { closePopup, usePopupStore, useThemeStore } from "../store";
 import CloseIcon from '../assets/material-icons/close.svg?react';
 
@@ -7,19 +6,25 @@ interface PopUpProps {
 }
 
 export function PopUp({ components }: PopUpProps) {
-  let padding_x = useLeftBreakpoints();
   let page = usePopupStore((state) => state.page);
 
-  return <div className='bg-white mx-0 md:mx-8 fixed top-[100%] left-0 right-0 
+  return <div className="w-full h-full fixed" style={{
+    pointerEvents: components && page in components ? "auto" : "none",
+  }} onClick={() => {
+    if (components && page in components) closePopup();
+  }}>
+    <div className='bg-white mx-0 md:mx-8 fixed top-[100%] left-0 right-0 
   rounded-t-[1.5rem] shadow-[0_2px_16px_rgba(0,0,0,0.25)] 
   transition-transform duration-300 ease-in-out p-8'
-    style={{
-      // padding: `2rem ${padding_x}px`,
-      // bottom: components && !(page in components) ? "-100%" : "0",
-      transform: components && page in components ? "translateY(-100%)" : "translateY(0)",
-    }}
-  >
-    {components && page in components ? components[page] : ""}
+      style={{
+        // padding: `2rem ${padding_x}px`,
+        // bottom: components && !(page in components) ? "-100%" : "0",
+        transform: components && page in components ? "translateY(-100%)" : "translateY(0)",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {components && page in components ? components[page] : ""}
+    </div>
   </div>
 }
 

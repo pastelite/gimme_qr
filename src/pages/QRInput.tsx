@@ -20,6 +20,10 @@ export function QRInput() {
   flex items-left justify-start md:justify-center flex-col gap-4
   h-full p-5 md:p-12 lg:p-24'>
     <input type="text" className='text-3xl border-b-2 py-1 border-black w-full outline-none' placeholder='https://qr.pstl.dev/' onChange={e => {
+      if (e.target.value === '') {
+        setInputText('https://qr.pstl.dev/');
+        return;
+      }
       setInputText(e.target.value);
     }}></input>
 
