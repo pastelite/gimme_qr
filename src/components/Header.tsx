@@ -2,28 +2,31 @@ import { useMeasurementStore, useThemeStore } from '../store';
 import ExpandMoreIcon from '../assets/material-icons/expand_more.svg?react';
 import QRCodeIcon from '../assets/ux-wings/qr-code.svg?react';
 import { themeBreakpoints } from '../tailwind-theme';
+import { useLeftBreakpoints, useTopBreakpoints } from '../hooks/useBreakpoints';
 
 export function Header() {
   let theme = useThemeStore();
   let breakpoint = useMeasurementStore((state) => state.breakpoint);
 
   let surfaceColor = breakpoint >= themeBreakpoints['md'] ? theme.surfaceColor : theme.behindBackgroundSurfaceColor;
-  let left = 0
-  if (breakpoint >= themeBreakpoints['lg']) {
-    left = 100
-  } else if (breakpoint >= themeBreakpoints['md']) {
-    left = 50
-  } else {
-    left = 24
-  }
-  let top = 0
-  if (breakpoint >= themeBreakpoints['lg']) {
-    top = 50
-  } else if (breakpoint >= themeBreakpoints['md']) {
-    top = 50
-  } else {
-    top = 24
-  }
+  // let left = 0
+  // if (breakpoint >= themeBreakpoints['lg']) {
+  //   left = 100
+  // } else if (breakpoint >= themeBreakpoints['md']) {
+  //   left = 50
+  // } else {
+  //   left = 24
+  // }
+  // let top = 0
+  // if (breakpoint >= themeBreakpoints['lg']) {
+  //   top = 50
+  // } else if (breakpoint >= themeBreakpoints['md']) {
+  //   top = 50
+  // } else {
+  //   top = 24
+  // }
+  let left = useLeftBreakpoints()
+  let top = useTopBreakpoints()
   
   return (<div className='flex absolute h-[40px] w-max shadow-none' style={{
     gridArea: 'header',

@@ -64,3 +64,22 @@ export const useMeasurementStore = create<MeasurementStore>((set) => ({
   breakpoint: 0,
   setBreakpoint: (breakpoint) => set({ breakpoint }),
 }))
+
+interface PopupStore {
+  page: string
+  setPage: (page: string) => void
+}
+
+export const usePopupStore = create<PopupStore>((set) => ({
+  page: 'test',
+  setPage: (page) => set({ page }),
+}))
+
+export const openPopup = (page: string) => {
+  console.log("openPopup", page)
+  usePopupStore.setState({ page })
+}
+
+export const closePopup = () => {
+  usePopupStore.setState({ page: '' })
+}
